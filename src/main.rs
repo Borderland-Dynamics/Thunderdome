@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, Write};
 
 struct Damage {
     amount: u32,
@@ -8,6 +8,7 @@ struct Damage {
 struct Character {
     name: String,
     stamina: u32,
+    strength: u32,
 }
 
 impl Character {
@@ -27,7 +28,7 @@ impl Character {
     }
 
     fn attack(&self, target: &mut Character) -> Damage {
-        target.damage(5)
+        target.damage(self.strength)
     }
 }
 
@@ -41,7 +42,8 @@ impl LocalPlayer {
     fn ask(&self, question: String) -> String {
         let mut answer = String::new();
 
-        println!("{}", question);
+        print!("{} ", question);
+        io::stdout().flush().unwrap();
 
         io::stdin()
             .read_line(&mut answer)
@@ -55,14 +57,22 @@ fn main() {
     let player = LocalPlayer {};
     let name = player.ask(String::from("Gladiator! What is your name?"));
 
-    let mut player_character = Character { name, stamina: 30 };
+    let mut player_character = Character {
+        name,
+        stamina: 25,
+        strength: 5,
+    };
 
     let mut monster = Character {
         name: String::from("Monster"),
-        stamina: 20,
+        stamina: 50,
+        strength: 15,
     };
 
-    player.tell(String::from("Two men enter, one man leaves!"));
+    player.tell(String::from("\nListen all! This is the truth of it.\n"));
+    player.tell(String::from("Fighting leads to killing, and killing gets to warring. And that was damn near the death of us all. Look at us now! Busted up, and everyone talking about hard rain! But we’ve learned, by the dust of them all… Bartertown learned.\n"));
+    player.tell(String::from("Now, when men get to fighting, it happens here! And it finishes here!\n"));
+    player.tell(String::from("Two men enter; one man leaves.\n"));
 
     loop {
         let monster_damage = monster.attack(&mut player_character);
