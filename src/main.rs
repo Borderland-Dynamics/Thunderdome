@@ -1,7 +1,7 @@
 use std::io::{self, Write};
 
 struct Damage {
-    amount: u32,
+    total: u32,
     overkill: u32,
 }
 
@@ -12,19 +12,17 @@ struct Character {
 }
 
 impl Character {
-    fn damage(&mut self, amount: u32) -> Damage {
+    fn damage(&mut self, total: u32) -> Damage {
         let mut overkill = 0;
-        let mut damage = amount.clone();
 
-        if self.stamina >= amount {
-            self.stamina = self.stamina - amount;
+        if self.stamina >= total {
+            self.stamina = self.stamina - total;
         } else {
-            overkill = amount - self.stamina;
-            damage = self.stamina.clone();
+            overkill = total - self.stamina;
             self.stamina = 0;
         }
 
-        Damage { amount: damage, overkill }
+        Damage { total, overkill }
     }
 
     fn attack(&self, target: &mut Character) -> Damage {
@@ -76,7 +74,7 @@ fn main() {
 
     loop {
         let monster_damage = monster.attack(&mut player_character);
-        player.tell(format!("{} attacks {} for {} damage!", monster.name, player_character.name, monster_damage.amount));
+        player.tell(format!("{} attacks {} for {} damage!", monster.name, player_character.name, monster_damage.total));
         if player_character.stamina == 0 && monster_damage.overkill > 0 {
             player.tell(format!("{} is dead. ({} overkill)", player_character.name, monster_damage.overkill));
             break
@@ -88,7 +86,7 @@ fn main() {
         }
 
         let player_damage = player_character.attack(&mut monster);
-        player.tell(format!("{} attacks {} for {} damage!", player_character.name, monster.name, player_damage.amount));
+        player.tell(format!("{} attacks {} for {} damage!", player_character.name, monster.name, player_damage.total));
         if monster.stamina == 0 && player_damage.overkill > 0 {
             player.tell(format!("{} is dead. ({} overkill)", monster.name, player_damage.overkill));
             break
