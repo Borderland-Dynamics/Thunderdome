@@ -64,7 +64,7 @@ fn main() {
     };
 
     let mut monster = Character {
-        name: String::from("Monster"),
+        name: String::from("Master Blaster"),
         stamina: 50,
         strength: 15,
     };
