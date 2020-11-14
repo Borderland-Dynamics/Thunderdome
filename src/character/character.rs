@@ -16,7 +16,7 @@ impl Character {
         }
     }
 
-    pub fn damage(&mut self, total: u32) -> Damage {
+    pub fn damage(&mut self, attacker: &Character, total: u32) -> Damage {
         let mut overkill = 0;
 
         if self.stamina >= total {
@@ -26,10 +26,16 @@ impl Character {
             self.stamina = 0;
         }
 
-        Damage { total, overkill }
+        Damage {
+            attacker_name: attacker.name.clone(),
+            defender_name: self.name.clone(),
+            total,
+            overkill,
+            remaining: self.stamina,
+        }
     }
 
     pub fn attack(&self, target: &mut Character) -> Damage {
-        target.damage(self.strength + roll(6) + roll(6) - 6)
+        target.damage(&self, self.strength + roll(6) + roll(6) - 6)
     }
 }
