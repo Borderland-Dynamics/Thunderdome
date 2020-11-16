@@ -8,9 +8,9 @@ pub struct Character {
 }
 
 impl Character {
-    pub fn new(name: String, stamina: u32, strength: u32) -> Character {
+    pub fn new(name: &str, stamina: u32, strength: u32) -> Character {
         Character {
-            name,
+            name: name.to_string(),
             stamina,
             strength,
         }
